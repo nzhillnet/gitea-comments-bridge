@@ -1,0 +1,26 @@
+services:
+  gitea-bridge:
+    build: .
+    image: gitea-bridge:latest
+    container_name: gitea-bridge
+    restart: unless-stopped
+    ports:
+      - "18080:8080"              # whatever your reverse proxy should talk to
+    environment:
+      # Required
+      - GITEA_URL=https://gitea.example.com/api/v1
+      - REPO_OWNER=example-user
+      - REPO_NAME=example-site
+      - GITEA_TOKEN=changeme      # scoped token: repo issue read + write only
+      # Optional
+      - SITE_NAME=example.com
+      - SITE_URL=https://example.com
+      - TZ=UTC
+      # Optional: e-mail notification on a new comment (unset to disable)
+      # - MAIL_RELAY_HOST=mail.example.com
+      # - MAIL_RELAY_PORT=25
+      # - MAIL_FROM=comments@example.com
+      # - MAIL_TO=you@example.com
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
